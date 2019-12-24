@@ -1,0 +1,82 @@
+program if_statement_test;
+
+#include( "stdlib.hhf")
+
+static
+    basic_bool:     boolean := false;
+    num_0:          int32   := 0;
+    num_1:          int32   := 1;
+
+begin if_statement_test;
+
+    // HLA boolean expressions take the following forms:
+    // flag_specification
+    // !flag_specification
+    // register
+    // !register
+    // Boolean_variable 
+    // !Boolean_variable
+    // mem_reg relop mem_reg_const
+    // register in LowConst..HiConst
+    // register not in LowConst..HiConst
+
+    // -> Flag specification refers to the FLAGS register. See page 18, but as some examples:
+    // @z is true if zero flag is set, false otherwise
+    // @nz is true if zero flag is clear, false otherwise
+    // @o is true if overflow flag is set, false otherwise
+    // etc
+
+    if (basic_bool) then
+        stdout.put( "Hello, World of Assembly Language", nl );
+        stdout.put( "basic_bool is true. We're going to print it out now: ", basic_bool, nl);
+    else
+        stdout.put( "basic_bool is false. We're going to print it out now: ", basic_bool, nl);
+    endif;
+
+    // Comparisons are slightly weird - you can't do memory address to memory address comparisons,
+    // but that's just how it is under the hood (you need to get the values into the processor to do
+    // some sort of comparison, of course).
+    // Because variables in HLA in a sense point to a memory address, we can't do the following:
+    //   if (num_1 == num_0) then
+    // so we need to load at least one into a register.
+
+    mov(num_0, eax);
+    
+    if (num_1 == eax) then
+        stdout.put(num_1, " is equal to ", eax, nl); // No it won't be
+    elseif (num_1 < eax) then
+        stdout.put(num_1, " is less than ", eax, nl); // No it won't be
+    else
+        stdout.put(num_1, " is more than ", eax, nl);
+    endif;
+
+    // Let's use the flags:
+    add(num_1, eax); // eax += 1; eax is now 1
+    if (@z) then
+        stdout.put( "The last arithmetic operation resulted in a zero", nl);
+    elseif (@nz) then
+        stdout.put( "The last arithmetic operation did not result in a zero", nl);
+    else
+        stdout.put( "What the fuck", nl); // This should not happen
+    endif;
+
+    sub(num_1, eax); // eax -= 1; eax is now 0
+    if (@z) then
+        stdout.put( "The last arithmetic operation resulted in a zero", nl);
+    elseif (@nz) then
+        stdout.put( "The last arithmetic operation did not result in a zero", nl);
+    else
+        stdout.put( "What the fuck", nl); // This should not happen
+    endif;
+
+
+    sub(num_1, eax); // eax -= 1; eax is now -1
+    if (@s) then
+        stdout.put( "The last arithmetic operation resulted in the sign flag being set", nl);
+    elseif (@ns) then
+        stdout.put( "The last arithmetic operation did not result in the sign flag being set", nl);
+    else
+        stdout.put( "What the fuck", nl); // This should not happen
+    endif;
+
+end if_statement_test;

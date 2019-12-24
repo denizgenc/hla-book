@@ -1,0 +1,45 @@
+program boolean_operators_test;
+
+#include("stdlib.hhf")
+
+static
+    letter:     char    := 'h';
+ // num:        int8    := 'f'; // I wonder if this works - no it doesn't
+    num:        uns8    := 102; // this works (ASCII 'f' == decimal 102)
+    bignum:     int32   := 69420;
+    res_0:      char;
+    res_1:      char;
+    res_2:      int16;
+
+begin boolean_operators_test;
+
+    // && is boolean and
+    if ( letter == 'h' && num == 'f') then // This comparison works
+        mov(letter, ah);
+        mov(num, al);
+    else
+        mov(1, ah);
+        mov(1, al);
+    endif;
+
+    // The below prints it out in hex, which is ok I guess but not exactly what we want
+//  stdout.put("High 8 bits of AX is: ", ah, nl);
+//  stdout.put("Low 8 bits of AX is: ", hl, nl);
+//  stdout.put("AX itself is: ", res_2, nl);
+
+    mov(ah, res_0);
+    mov(al, res_1);
+    mov(ax, res_2);
+
+    stdout.put("High 8 bits of AX is: ", res_0, nl);
+    stdout.put("Low 8 bits of AX is: ", res_1, nl);
+    stdout.put("AX itself is: ", res_2, nl);
+
+    // || is boolean or
+    if ( letter in 'a' .. 'm' || num in 'n' .. 'z') then // second condition is false
+        stdout.put("Or conditional expression evaluated to true", nl);
+    else
+        stdout.put("Or conditional expression evaluated to false", nl);
+    endif;
+
+end boolean_operators_test;
