@@ -1,4 +1,4 @@
-# hla-book
+# hla-book
 
 A repository of programs I've written based on the Art of Assembly Language book by Randall Hyde. To
 make the most out of this repository, you'll need (GNU?) `make` and the High Level Assembly compiler
